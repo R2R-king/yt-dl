@@ -1,9 +1,6 @@
 import sys
 import pytube
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QComboBox, QFileDialog, QMessageBox
-from bs4 import BeautifulSoup
-import requests
-
 
 class Downloader(QWidget):
     def __init__(self):
@@ -44,18 +41,6 @@ class Downloader(QWidget):
         self.setWindowTitle('YouTube Downloader By R2R')
         self.show()
 
-    def get_video_title(self, url):
-        try:
-            response = requests.get(url)
-            if response.status_code == 200:
-                soup = BeautifulSoup(response.content, 'html.parser')
-                video_title = soup.find('meta', {'name': 'title'})['content']
-                return video_title
-            else:
-                return "Название видео не найдено"
-        except requests.RequestException:
-            return "Ошибка при получении названия видео"
-
     def get_quality(self):
         # Получение URL-адреса YouTube видео
         url = self.url_input.text()
@@ -75,7 +60,6 @@ class Downloader(QWidget):
         self.quality_select.clear()
         for stream in streams:
             self.quality_select.addItem(stream.resolution)
-
 
     def download(self):
         # Проверка, что был получен объект YouTube
@@ -110,7 +94,6 @@ class Downloader(QWidget):
                 stream.download(save_path)
                 QMessageBox.information(self, "Загрузка завершена", "Успешно скачано!")
                 return
-
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
